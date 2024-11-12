@@ -1,17 +1,38 @@
+from urllib.parse import quote_plus
 from flask import Flask, request, render_template
 import sqlite3
 import time
+import psycopg2
+from flask_cors import CORS
+import os
+from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="../frontend/templates", static_folder='../frontend/static')
+CORS(app)
 
-# Database setup
-def init_db():
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)''')
-    cursor.execute('''INSERT INTO users (username, password) VALUES ('admin', 'admin')''')
-    conn.commit()
-    conn.close()
+# postgresql://postgres:AGpiPAbmsPgaHZpsluaMjHvvXRigJVjr@autorack.proxy.rlwy.net:13722/railway
+
+password = quote_plus(os.getenv('DB_PASSWORD', 'AGpiPAbmsPgaHZpsluaMjHvvXRigJVjr'))
+db_host = os.getenv('DB_HOST', 'autorack.proxy.rlwy.net')
+db_port = os.getenv('DB_PORT', '13722')
+db_name = os.getenv('DB_NAME', 'railway')
+db_user = os.getenv('DB_USER', 'postgres')
+
+
+
+#sql alchemy lets map database into the code
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:AGpiPAbmsPgaHZpsluaMjHvvXRigJVjr@autorack.proxy.rlwy.net:13722/railway'  #setting up the localization of database
+app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
+
+db = SQLAlchemy(app)
+
+class Entry(db.Model):  #table's name is created based on class name, but converted to lower case
+    __tablename__ = 'entry'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.String(20), nullable=False)
+    entry_type = db.Column(db.Text, nullable=False)
 
 @app.route('/')
 def index():
@@ -59,8 +80,7 @@ def time_based_sqli():
         return render_template('time_based_sqli.html', result=result, time_taken=end_time - start_time)
     return render_template('time_based_sqli.html')
 
-# Add routes for other SQL Injection types similarly...
+port = int(os.environ.get('PORT', 5112))
 
 if __name__ == '__main__':
-    init_db()
-    app.run(debug=True)
+    app.run(host='0.0.0.0',port=port, debug=True)
