@@ -7,7 +7,7 @@ Kamil: Classic SQL Injection
 <br>
 <br>
 
-# Prezentacja (Omówienie każdego z ataków wraz z omówieniem zabezpieczenia przed nim zabezpieczeniem przed nim)
+# Prezentacja (Omówienie każdego z ataków wraz z omówieniem zabezpieczeniem przed nim)
 Szymon: Inferential (Blind) SQL Injection -> Time-based, Boolean-based SQL Injection
 <br>
 Paweł: In-band SQL Injection -> Union-Based, Error-Based
