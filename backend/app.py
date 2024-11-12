@@ -34,6 +34,9 @@ class Entry(db.Model):  #table's name is created based on class name, but conver
     timestamp = db.Column(db.String(20), nullable=False)
     entry_type = db.Column(db.Text, nullable=False)
 
+with app.app_context():
+    db.create_all()
+
 @app.route('/')
 def index():
     return render_template('index.html')
