@@ -18,6 +18,8 @@ db_port = os.getenv('DB_PORT', '13722')
 db_name = os.getenv('DB_NAME', 'railway')
 db_user = os.getenv('DB_USER', 'postgres')
 
+DATABASE_URL = f"postgresql://{db_user}:{password}@{db_host}:{db_port}/{db_name}"
+
 
 
 #sql alchemy lets map database into the code
@@ -54,6 +56,21 @@ def classic_sqli():
         conn.close()
         return render_template('classic_sqli.html', result=result)
     return render_template('classic_sqli.html')
+
+@app.route('/second_order_sqli', methods=['GET', 'POST'])
+def second_order_sqli():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cursor:
+                # UWAGA: Wrażliwe na SQL Injection, zaleca się stosowanie zapytań z parametrami!
+                query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+                cursor.execute(query)
+                result = cursor.fetchall()
+
+        return render_template('second_order_sqli.html', result=result)
+    return render_template('second_order_sqli.html')
 
 @app.route('/blind_sqli', methods=['GET', 'POST'])
 def blind_sqli():
