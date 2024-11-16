@@ -6,6 +6,7 @@ import psycopg2
 from flask_cors import CORS
 import os
 from flask_sqlalchemy import SQLAlchemy
+from second_order import second_order_bp
 
 app = Flask(__name__, template_folder="../frontend/templates", static_folder='../frontend/static')
 CORS(app)
@@ -18,7 +19,7 @@ db_port = os.getenv('DB_PORT', '13722')
 db_name = os.getenv('DB_NAME', 'railway')
 db_user = os.getenv('DB_USER', 'postgres')
 
-DATABASE_URL = f"postgresql://{db_user}:{password}@{db_host}:{db_port}/{db_name}"
+app.config['DATABASE_URL'] = f"postgresql://{db_user}:{password}@{db_host}:{db_port}/{db_name}"
 
 
 
@@ -57,21 +58,6 @@ def classic_sqli():
         return render_template('classic_sqli.html', result=result)
     return render_template('classic_sqli.html')
 
-@app.route('/second_order_sqli', methods=['GET', 'POST'])
-def second_order_sqli():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        with psycopg2.connect(DATABASE_URL) as conn:
-            with conn.cursor() as cursor:
-                # UWAGA: Wrażliwe na SQL Injection, zaleca się stosowanie zapytań z parametrami!
-                query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
-                cursor.execute(query)
-                result = cursor.fetchall()
-
-        return render_template('second_order_sqli.html', result=result)
-    return render_template('second_order_sqli.html')
-
 @app.route('/blind_sqli', methods=['GET', 'POST'])
 def blind_sqli():
     if request.method == 'POST':
@@ -99,6 +85,8 @@ def time_based_sqli():
         conn.close()
         return render_template('time_based_sqli.html', result=result, time_taken=end_time - start_time)
     return render_template('time_based_sqli.html')
+
+app.register_blueprint(second_order_bp)
 
 port = int(os.environ.get('PORT', 5112))
 
