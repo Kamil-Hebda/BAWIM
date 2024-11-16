@@ -14,4 +14,5 @@ Paweł: In-band SQL Injection -> Union-Based, Error-Based
 <br>
 Kamil: Out-Of-Band SQL, Wstępny Slajd
 
+[Prezentacja](https://www.canva.com/design/DAGWNQNORQI/fIYqqLtkomV98QPgH6SQhw/edit)
 
