@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Time-Based SQL Injection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Time-Based SQL Injection</h1>
+
+        {% include "login.html" %}
+
+        {% if result %}
+            <h2 class="mt-4">Result:</h2>
+            <pre class="bg-light p-3">{{ result }}</pre>
+        {% endif %}
+
+        {% if time_taken %}
+            <h2 class="mt-4">Time Taken:</h2>
+            <p class="bg-light p-3">{{ time_taken }} seconds</p>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
