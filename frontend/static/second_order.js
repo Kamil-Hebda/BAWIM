@@ -60,8 +60,10 @@ document.addEventListener('DOMContentLoaded', function(event) {
                 }
             })
             .then(data => {
-                console.log(data);
-                alert("Successfully logged in!");
+                document.getElementById('modal-message').innerText = data.feedback;
+                document.getElementById('modal-sql-query').innerText = data.message;
+                const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+                modal.show();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -69,3 +71,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
             });
     });
 });
+
+function redirectToHome() {
+    window.location.href = '/';
+}
