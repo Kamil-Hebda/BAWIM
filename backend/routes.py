@@ -85,12 +85,15 @@ def init_routes(app):
         result = cursor.fetchall()
         
         result_list = [list(row) for row in result]
-        print(result_list)
+        result_list1 = "\n".join([" ".join(map(str, row)) for row in result_list])
+        print(result_list1)
         
-        if len(result_list) != 0:
-            return jsonify(result_list), 200
+        if len(result_list) > 1:
+            return jsonify({"feedback": "Success Attack", "message": result_list1}), 200
+        elif len(result_list) == 1:
+            return jsonify({"feedback": "Failed Attack, Success Login", "message": result_list1}), 200
         else:
-            return jsonify({"message": "Login failed!"}), 401
+            return jsonify({"feedback": "Faild Attack, Faild Login", "message": "Login failed!"}), 401
 
     @app.route('/blind_sqli', methods=['GET', 'POST'])
     def blind_sqli():
