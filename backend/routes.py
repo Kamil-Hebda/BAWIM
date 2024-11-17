@@ -103,7 +103,22 @@ def init_routes(app):
             conn.close()
             return render_template('blind_sqli.html', result=result)
         return render_template('blind_sqli.html')
-    
+
+    @app.route('/error_based_sqli', methods=['GET', 'POST'])
+    def error_based_sqli():
+        result = None
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
+            with psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI']) as conn:
+                with conn.cursor() as cursor:
+                    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+            # Przekazujemy wynik do szablonu
+        return render_template('error_based_sqli.html', result=result)
+
+
     @app.route('/out_of_band_sqli', methods=['GET', 'POST'])
     def out_of_band_sqli():
         if request.method == 'POST':

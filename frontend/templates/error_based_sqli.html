@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Error-based SQL Injection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
+        <h1 class="text-primary">Error-Based SQL Injection</h1>
+        <p class="lead">Celem zadania jest przeprowadzenie <strong>Error-Based SQLi</strong>, aby uzyskać nazwy tabel znajdujących się w bazie danych PostgreSQL.
+            Baza danych PostgreSQL przechowuje metadane w tabeli information_schema.tables.
+                Istotne kolumny w tej tabeli:
+                table_name – nazwa tabeli.</p>
+        {% include "login.html" %}
+        <div id="result" class="mt-4"></div>
+    </div>
+    <div class="container mt-5">
+        <h1>Results</h1>
+        <!-- Wyświetlanie wyników -->
+        {% if result %}
+        <div id="result" class="mt-4">
+            <pre>{{ result }}</pre>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
