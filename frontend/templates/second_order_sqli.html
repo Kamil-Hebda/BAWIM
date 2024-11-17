@@ -8,7 +8,11 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Second-order SQL Injection</h1>
+        <h1 style="font-weight: bold;">Second-order SQL Injection</h1>
+        <p>Celem zadania jest <span style="font-weight: bold;">pozyskanie danych o loginach i hasłach użytkowników</span>, znajdujących się w bazie danych tego serwisu.
+        <br>Atakujący, powinien stworzyć odpowiedni login, a następnie zalogować się w celu przechwycenia zawartości DB.</p>
+        <p>Atak trzeba przeprowadzić według przedstawionego podczas części teoretycznej paradygmatu <span style="font-weight: bold;"> Second-Order SQL Injection.</span></p>
+        <p>UWAGA! Zastanów się jak <span style="font-weight: bold;">FLASK</span> operuje na bazach danych (jakiego warunku OR trzeba użyć).</p>
         <form id="signupForm" class="mt-4">
             <div class="form-group">
                 <label for="username">Username:</label>
@@ -16,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="text" id="password" name="password" class="form-control">
+                <input type="password" id="password" name="password" class="form-control">
             </div>
             <button type="submit" class="btn btn-primary" id="loginButton">Log in</button>
             <button type="submit" class="btn btn-primary float-right" id="signupButton">Sign up</button>
@@ -26,6 +30,30 @@
             <pre class="bg-light p-3">{{ result }}</pre>
         {% endif %}
     </div>
+
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel"><span style="font-weight: bold;">Login Output</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-message" style="font-weight: bold;"></p>
+                    <div class="">
+                    <p class="mt-3">Celem mechanizmu Secon-Order SQL Injecion jest przede wszystkim wydobycie podatnych na atak danych. W tym procesie, aby to uzyskać początkowo napastnik wstrzykuję zainfekowane zapytanie, aby to następnie, w naturalnym procesie działania aplikacji mogło się ono uzewnętrznić. Generalnym celem jest wydobycie danych, a nie nieautoryzowany dostęp.</p>
+                    </div>
+                    <h6 class="mt-3"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;SQL Output:</span></h6>
+                    <pre id="modal-sql-query" class="bg-light p-3"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload();">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="redirectToHome()">Go to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../static/second_order.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
