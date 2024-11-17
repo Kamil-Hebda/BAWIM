@@ -1,10 +1,11 @@
-from flask import current_app, redirect, request, render_template, url_for
 import sqlite3
 import time
-import psycopg2
-from models import db
-from flask import jsonify
 from random import randint
+
+import psycopg2
+from flask import (current_app, jsonify, redirect, render_template, request,
+                   url_for)
+from models import db
 
 
 def init_routes(app):
@@ -79,15 +80,15 @@ def init_routes(app):
         conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
         cursor = conn.cursor()
         
-        query = "SELECT * FROM second_order_users WHERE username = %s AND password_hash = %s"
-        cursor.execute(query, (username, password))
+        query = f"SELECT * FROM second_order_users WHERE password_hash = '{password}' AND username = '{username}'"    # solution: username' OR '''' = '''
+        cursor.execute(query)
         result = cursor.fetchall()
         
         result_list = [list(row) for row in result]
         print(result_list)
         
-        if len(result) != 0:
-            return jsonify({"message": f"Login successful for user {username} with password {password}", "data": result}), 200
+        if len(result_list) != 0:
+            return jsonify(result_list), 200
         else:
             return jsonify({"message": "Login failed!"}), 401
 

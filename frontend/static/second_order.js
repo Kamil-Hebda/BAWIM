@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', function(event) {
                 }
             })
             .then(data => {
-                console.log(data.message);
-                alert(data.message);
+                console.log(data);
+                alert("Successfully logged in!");
             })
             .catch(error => {
                 console.error('Error:', error);
