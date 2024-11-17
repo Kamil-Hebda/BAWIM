@@ -104,3 +104,20 @@ def init_routes(app):
             conn.close()
             return render_template('blind_sqli.html', result=result)
         return render_template('blind_sqli.html')
+    
+    @app.route('/out_of_band_sqli', methods=['GET', 'POST'])
+    def out_of_band_sqli():
+        if request.method == 'POST':
+            data = request.get_json()
+            if data:
+                username = data['username']
+                password = data['password']
+                conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+                cursor = conn.cursor()
+                # Celowe wprowadzanie podatności SQL Injection
+                cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+                conn.commit()
+                conn.close()
+                return jsonify({"status": "success", "message": "Out-of-Band SQL Injection executed"}), 200
+            return jsonify({"status": "error", "message": "No data provided"}), 400
+        return render_template('out_of_band_sqli.html')
