@@ -7,23 +7,79 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Time-Based SQL Injection</h1>
+    <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
+        <h1 class="text-primary">Time-Based SQL Injection</h1>
+        <p class="lead">Celem zadania jest zalogować się na konto określonego użytkownika przy użyciu ataku <strong>Time-Based SQLi</strong>.</p>
+        <div class="alert alert-info">
+            <strong>Użytkownik, na którego konto chcemy się zalogować to:</strong>
+            <span id="random-user" style="font-weight: bold;"></span>
+        </div>
 
-        {% include "login.html" %}
+        <div class="mt-4">
+            {% include "login.html" %}
+        </div>
 
         {% if result %}
-            <h2 class="mt-4">Result:</h2>
-            <pre class="bg-light p-3">{{ result }}</pre>
+        <div class="mt-4">
+            <h2 class="text-success">Result:</h2>
+            <pre class="bg-light p-3 border">{{ result }}</pre>
+        </div>
         {% endif %}
 
         {% if time_taken %}
-            <h2 class="mt-4">Time Taken:</h2>
-            <p class="bg-light p-3">{{ time_taken }} seconds</p>
+        <div class="mt-4">
+            <h2 class="text-info">Time Taken:</h2>
+            <p class="bg-light p-3 border">{{ time_taken }} seconds</p>
+        </div>
         {% endif %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        let randomUsername = '';
+
+        document.getElementById('sqli-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username !== randomUsername) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `<h2>Error:</h2><pre class="bg-light p-3">Incorrect username. Please use the provided username.</pre>`;
+                return;
+            }
+
+            fetch('/time_based_sqli', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `<h2>Result:</h2><pre class="bg-light p-3">${data.message}</pre>`;
+                } else {
+                    resultDiv.innerHTML = `<h2>Error:</h2><pre class="bg-light p-3">${data.message}</pre>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        fetch('/get_one_rand_user')
+            .then(response => response.json())
+            .then(data => {
+                randomUsername = data.username;
+                document.getElementById('random-user').innerText = randomUsername;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
