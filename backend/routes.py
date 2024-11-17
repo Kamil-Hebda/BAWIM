@@ -1,4 +1,4 @@
-from flask import request, render_template
+from flask import current_app, redirect, request, render_template, url_for
 import sqlite3
 import time
 import psycopg2
@@ -41,11 +41,45 @@ def init_routes(app):
             password = request.form['password']
             with psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI']) as conn:
                 with conn.cursor() as cursor:
-                    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+                    query = f"SELECT * FROM second_order_users WHERE username = '{username}' AND password = '{password}'"
                     cursor.execute(query)
                     result = cursor.fetchall()
+
             return render_template('second_order_sqli.html', result=result)
         return render_template('second_order_sqli.html')
+    
+    @app.route('/signup', methods=['POST'])
+    def signup():
+        username = request.json.get('username')
+        password = request.json.get('password')
+        
+        conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO second_order_users (username, password_hash) VALUES (%s, %s)", (username, password))
+        conn.commit()
+        conn.close()
+        
+        return redirect(url_for('second_order_sqli'))
+    
+    @app.route('/login', methods=['POST'])
+    def login():
+        username = request.json.get('username')
+        password = request.json.get('password')
+        
+        conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+        cursor = conn.cursor()
+        
+        query = "SELECT * FROM second_order_users WHERE username = %s AND password_hash = %s"
+        cursor.execute(query, (username, password))
+        result = cursor.fetchall()
+        
+        result_list = [list(row) for row in result]
+        print(result_list)
+        
+        if len(result) != 0:
+            return jsonify({"message": f"Login successful for user {username} with password {password}", "data": result}), 200
+        else:
+            return jsonify({"message": "Login failed!"}), 401
 
     @app.route('/blind_sqli', methods=['GET', 'POST'])
     def blind_sqli():
