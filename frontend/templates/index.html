@@ -9,16 +9,21 @@
 <body>
     <div class="container">
         <h1 class="mt-5">SQL Injection Demo</h1>
-        <ul class="list-group mt-3">
-            <li class="list-group-item"><a href="/classic_sqli">Classic SQL Injection</a></li>
-            <li class="list-group-item"><a href="/blind_sqli">Blind SQL Injection</a></li>
-            <li class="list-group-item"><a href="/time_based_sqli">Time-based Blind SQL Injection</a></li>
-            <li class="list-group-item"><a href="/union_based_sqli">Union-based SQL Injection</a></li>
-            <li class="list-group-item"><a href="/error_based_sqli">Error-based SQL Injection</a></li>
-            <li class="list-group-item"><a href="/boolean_based_sqli">Boolean-based Blind SQL Injection</a></li>
-            <li class="list-group-item"><a href="/second_order_sqli">Second-order SQL Injection</a></li>
-        </ul>
+        <div class="list-group mt-3">
+            <button class="list-group-item list-group-item-action" onclick="redirectTo('/classic_sqli')">Classic SQL Injection</button>
+            <button class="list-group-item list-group-item-action" onclick="redirectTo('/blind_sqli')">Blind SQL Injection</button>
+            <button class="list-group-item list-group-item-action" onclick="redirectTo('/time_based_sqli')">Time-based Blind SQL Injection</button>
+            <button class="list-group-item list-group-item-action" onclick="redirectTo('/union_based_sqli')">Union-based SQL Injection</button>
+            <button class="list-group-item list-group-item-action" onclick="redirectTo('/error_based_sqli')">Error-based SQL Injection</button>
+            <button class="list-group-item list-group-item-action" onclick="redirectTo('/boolean_based_sqli')">Boolean-based Blind SQL Injection</button>
+            <button class="list-group-item list-group-item-action" onclick="redirectTo('/second_order_sqli')">Second-order SQL Injection</button>
+        </div>
     </div>
+    <script>
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+    </script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>
