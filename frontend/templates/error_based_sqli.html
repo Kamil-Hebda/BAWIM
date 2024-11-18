@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Second-order SQL Injection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 style="font-weight: bold;">Error-Based SQL Injection</h1>
+        <p>W tym ćwiczeniu chcemy wykorzystać podatność naszej aplikacji webowej na atak typu <span style="font-weight: bold;">Error-Based SQL Injection.</span> <br>
+        Manipulując formularzem chcemy uzyskać jak najwięcej informacji o naszej bazie danych</p>
+        <p>Atak trzeba przeprowadzić według przedstawionego podczas części teoretycznej paradygmatu.</p>
+        <form id="signupForm" class="mt-4">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary" id="loginButton">Log in</button>
+            <button type="submit" class="btn btn-primary float-right" id="signupButton">Sign up</button>
+        </form>
+        {% if result %}
+            <h2 class="mt-4">Result:</h2>
+            <pre class="bg-light p-3">{{ result }}</pre>
+        {% endif %}
+    </div>
+
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel"><span style="font-weight: bold;">Login Output</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-message" style="font-weight: bold;"></p>
+                    <div class="">
+                    <p class="mt-3">Celem mechanizmu Error-Based SQL Injecion jest zdobycie jak największej ilości informacji o bazie danych, chociażby w celu sprawdzenia jej podatności na różnego rodzaju ataki, czy wykorzystaniu wydobytych dany w nieetyczny sposób.</p>
+                    </div>
+                    <h6 class="mt-3"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;SQL Output:</span></h6>
+                    <pre id="modal-sql-query" class="bg-light p-3"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload();">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="redirectToHome()">Go to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../static/error_based.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

