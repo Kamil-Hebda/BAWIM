@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>SQL Injection Demo</title>
+    <title>Test SQL Injection</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icon.png') }}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5">SQL Injection Demo</h1>
+        <h1 class="mt-5">Test SQL Injection</h1>
         <div class="list-group mt-3">
             <button class="list-group-item list-group-item-action" onclick="redirectTo('/classic_sqli')">Classic SQL Injection</button>
             <button class="list-group-item list-group-item-action" onclick="redirectTo('/time_based_sqli')">Time-based Blind SQL Injection</button>
@@ -23,6 +25,5 @@
             window.location.href = url;
         }
     </script>
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>
