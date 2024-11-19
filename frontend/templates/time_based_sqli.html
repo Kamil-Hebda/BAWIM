@@ -9,19 +9,34 @@
 </head>
 <body>
     <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
-        <h1 class="text-primary">Time-based SQLI</h1>
-        <div class="card">
+    <h1 class="text-primary">Time-Based SQL Injection</h1>
+    <h2 class="mt-4">Instrukcja przeprowadzenia ataku Time-Based SQL Injection</h2>
+    <div class="card mt-3">
         <div class="card-body">
-            <p>Celem zadania jest zalogować się na konto określonego użytkownika przy użyciu ataku Time-based SQLi.</p>
+            <p>
+                Celem tego zadania jest przeprowadzenie <strong>Time-Based SQL Injection</strong>, aby odczytać hasło użytkownika
+                <span id="random-user" class="fw-bold"></span>.
+            </p>
+            <p>
+                W trakcie ataku wykorzystasz funkcję <code>pg_sleep(5)</code>, aby sprawdzić, czy określony warunek w zapytaniu SQL jest spełniony.
+                Każdy warunek sprawdza pojedynczy znak hasła.
+            </p>
+            <h4 class="mt-3">Pomocne komendy:</h4>
+            <ul>
+                <li>
+                    <code>SELECT CASE</code>: Działa podobnie jak instrukcja warunkowa <em>if-else</em> w językach programowania. Pozwala wykonać różne operacje w zależności od spełnienia warunku.
+                </li>
+                <li>
+                    <code>SUBSTRING</code>: Umożliwia wybieranie określonych znaków z ciągu znaków, np. pojedynczych liter w haśle.
+                </li>
+                <li>
+                    <code>pg_sleep(5)</code>: Gdy warunek jest spełniony, serwer PostgreSQL opóźnia odpowiedź o 5 sekund, co pozwala potwierdzić poprawność warunku.
+                </li>
+            </ul>
         </div>
     </div>
 
-        <div class="alert alert-dark" style="margin-top: 20px" >
-            <strong>Użytkownik, na którego konto chcemy się zalogować to:</strong>
-            <span id="random-user" style="font-weight: bold;"></span>
-        </div>
-
-         <form id="sqli-form" method="post" class="mt-4">
+        <form id="sqli-form" method="post" class="mt-4">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" class="form-control">
@@ -30,12 +45,11 @@
                 <label for="password">Password:</label>
                 <input type="text" id="password" name="password" class="form-control">
             </div>
-            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
+            <button type="submit" class="btn btn-primary mt-3">Submit</button>
         </form>
 
         <div id="result" class="mt-4"></div>
         <div id="response-time" class="mt-4"></div>
-
     </div>
     {%include 'footer.html'%}
 

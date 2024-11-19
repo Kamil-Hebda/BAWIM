@@ -141,7 +141,7 @@ def init_routes(app):
                             "response_time": f"{elapsed_time:.2f} seconds"
                         }), 400
 
-                    if result:
+                    if password==result[2]:
                         return jsonify({
                             "status": "success",
                             "message": "Login successfully",
@@ -218,9 +218,9 @@ def init_routes(app):
             return jsonify({"message": "Wiesz coś więcej o bazie danych?", "feedback": "Brak użytkownika o podanych danych"}), 200
         return jsonify({"message": "Wiesz coś więcej o bazie danych?", "feedback": f"Żądany użytkownik: {result}"}), 200
 
-# UNION 
-# SELECT 1, table_name, column_name 
-# FROM information_schema.columns 
+# UNION
+# SELECT 1, table_name, column_name
+# FROM information_schema.columns
 # WHERE table_schema = 'public';
 
 # ' UNION SELECT 1, table_name, column_name FROM information_schema.columns WHERE table_schema = 'public'; --
