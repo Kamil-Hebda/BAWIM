@@ -3,21 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Classic SQL Injection</title>
+    <title>Authentication Bypass</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
-        <h1 class="text-primary">Authentication Bypass </h1>
-        <p>Celem zadania jest zalogować się na konto określonego użytkownika bez znania hasła. </p> 
-        <div class="alert alert-dark">
-            <strong>Użytkownik, na którego konto chcemy się zalogować to:</strong>
-            <span id="random-user" style="font-weight: bold;"></span>
+        <h1 class="text-primary mb-4">Authentication Bypass</h1>
+        <h2 class="mb-3">Instrukcja ataku typu Blind SQLI - Authentication Bypass</h2>
+        <div class="card mb-4">
+            <div class="card-body">
+            <h4 class="card-title">Instrukcja</h4>
+            <p class="card-text">Celem zadania jest zalogować się na konto określonego użytkownika bez znania hasła.<br>
+             Zadania jest proste. Mała wskazówka: użyj <code>OR</code></p>
+            <p class="card-text">Użytkownik, na którego konto chcemy się zalogować to: <span id="random-user" class="fw-bold"></span></p>
+            </div>
         </div>
+
         {% include "login.html" %}
 
         <div id="result" class="mt-4"></div>
+
+
+
+
+
     </div>
+
+
+
 
     <!-- Modal z bootstrap do wyświetlania się okienka -->
     <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
