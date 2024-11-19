@@ -11,14 +11,50 @@
 <body>
     <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
     <h1 style="font-weight: bold;">Error-Based SQL Injection</h1>
-        <div class="card">
+        <div class="card mt-3">
             <div class="card-body">
-                <p>W tym ćwiczeniu chcemy wykorzystać podatność naszej aplikacji webowej na atak typu <span style="font-weight: bold;">Error-Based SQL Injection.</span> <br>
-                Manipulując formularzem chcemy uzyskać jak najwięcej informacji o naszej bazie danych. Powinieneś skupić się na klauzuli <code>UNION</code>.  </p>
-                <p>Atak trzeba przeprowadzić według przedstawionego podczas części teoretycznej paradygmatu. W Rezultacie powinieneś wydobyć: <br>
-                <span style="font-weight: bold;">Rodzaj bazy danych, nazwy tabel, nazwę bazy danych, nazwy kolumny, nr portu naszej bazy danych.</span></p>
+                <p>
+                    Celem tego ćwiczenia jest wykorzystanie podatności aplikacji webowej na atak typu <strong>Error-Based SQL Injection</strong>. 
+                    Manipulując danymi w formularzu, będziesz miał możliwość uzyskania szczegółowych informacji na temat struktury i konfiguracji bazy danych.
+                </p>
+                <p>
+                    Podczas ataku powinieneś skupić się na wykorzystaniu klauzuli <code>UNION</code>, aby połączyć wyniki zapytań i wyświetlić dodatkowe informacje. 
+                    Proces ten powinien być przeprowadzony zgodnie z paradygmatem przedstawionym w prezentacji.
+                </p>
+                <h4 class="mt-3">Rezultaty ataku:</h4>
+                <ul>
+                    <li>
+                        <strong>Rodzaj bazy danych:</strong>
+                    </li>
+                    <li>
+                        <strong>Nazwy tabel:</strong>
+                    </li>
+                    <li>
+                        <strong>Nazwa bazy danych:</strong>
+                    </li>
+                    <li>
+                        <strong>Nazwy kolumn:</strong>
+                    </li>
+                    <li>
+                        <strong>Numer portu:</strong>
+                    </li>
+                </ul>
+                <h4 class="mt-3">Pomocne komendy:</h4>
+                <ul>
+                    <li>
+                        <code>UNION SELECT</code>: Pozwala połączyć wyniki kilku zapytań w jedno.
+                    </li>
+                    <li>
+                        <code>information_schema</code>: Specjalna baza danych, która przechowuje metadane, takie jak nazwy tabel, kolumn czy indeksów.
+                    </li>
+                </ul>
+                <p class="mt-3">
+                    W trakcie ćwiczenia pamiętaj, aby dokładnie analizować zwracane błędy i wykorzystywać je do iteracyjnego rozszerzania swoich zapytań. 
+                    Poprawność zapytania możesz testować etapami, zaczynając od prostych poleceń i stopniowo dodając kolejne elementy.
+                </p>
             </div>
         </div>
+
         {% include "signup.html" %}
     </div>
 
