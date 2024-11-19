@@ -20,6 +20,14 @@ def init_routes(app):
                 cursor.execute("SELECT username FROM users ORDER BY RANDOM() LIMIT 1")
                 result = cursor.fetchone()
         return jsonify({"username" : result[0]})
+
+    @app.route('/get_one_rand_user_local', methods=['GET'])
+    def get_one_rand_user_local():
+        with psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db2']) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT name FROM users ORDER BY RANDOM() LIMIT 1")
+                result = cursor.fetchone()
+        return jsonify({"username": result[0]})
     
     @app.route('/classic_sqli', methods=['GET', 'POST'])
     def classic_sqli():
@@ -98,19 +106,56 @@ def init_routes(app):
         else:
             return jsonify({"feedback": "Faild Attack, Faild Login", "message": "Login failed!"}), 401
 
+    import time  # Dodaj bibliotekę do pomiaru czasu
+
     @app.route('/time_based_sqli', methods=['GET', 'POST'])
-    def blind_sqli():
+    def time_based_sqli():
         if request.method == 'POST':
-            username = request.form['username']
-            conn = sqlite3.connect('database.db')
-            cursor = conn.cursor()
-            query = f"SELECT * FROM users WHERE username = '{username}'"
-            cursor.execute(query)
-            result = cursor.fetchall()
-            conn.close()
-            return render_template('time_based_sqli.html', result=result)
+            data = request.get_json()
+            if data:
+                username = data.get('username', '').strip()
+                password = data.get('password', '').strip()
+
+                if not username or not password:
+                    return jsonify({"status": "error", "message": "Username and password cannot be empty"}), 400
+
+                try:
+                    start_time = time.time()
+
+                    conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db2'])
+                    cursor = conn.cursor()
+
+                    query = f"SELECT * FROM users WHERE name = '{username}' AND password = '{password}'"
+                    cursor.execute(query)
+                    result = cursor.fetchone()
+                    conn.commit()
+                    conn.close()
+
+                    end_time = time.time()
+                    elapsed_time = end_time - start_time  # Czas w sekundach
+
+                    if elapsed_time > 5:
+                        return jsonify({
+                            "status": "error",
+                            "message": "Query took too long to execute",
+                            "response_time": f"{elapsed_time:.2f} seconds"
+                        }), 400
+
+                    if result:
+                        return jsonify({
+                            "status": "success",
+                            "message": "Login successfully",
+                            "response_time": f"{elapsed_time:.2f} seconds",
+                            "result": result
+                        }), 200
+
+                    return jsonify({"status": "error", "message": "Invalid username or password"}), 400
+
+                except Exception as e:
+                    return jsonify({"status": "error", "message": str(e)}), 500
+
+            return jsonify({"status": "error", "message": "No data provided"}), 400
         return render_template('time_based_sqli.html')
-    
 
     @app.route('/out_of_band_sqli', methods=['GET', 'POST'])
     def out_of_band_sqli():
