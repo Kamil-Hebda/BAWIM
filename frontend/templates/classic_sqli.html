@@ -15,7 +15,6 @@
         <h2 class="mb-3">Instrukcja ataku typu Blind SQLI - Authentication Bypass</h2>
         <div class="card mb-4">
             <div class="card-body">
-            <h4 class="card-title">Instrukcja</h4>
             <p class="card-text">Celem zadania jest zalogować się na konto określonego użytkownika bez znania hasła.<br>
              Zadania jest proste. Mała wskazówka: użyj <code>OR</code></p>
             <p class="card-text">Użytkownik, na którego konto chcemy się zalogować to: <span id="random-user" class="fw-bold"></span></p>
@@ -25,15 +24,7 @@
         {% include "login.html" %}
 
         <div id="result" class="mt-4"></div>
-
-
-
-
-
     </div>
-
-
-
 
     <!-- Modal z bootstrap do wyświetlania się okienka -->
     <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
@@ -46,7 +37,7 @@
                 <div class="modal-body">
                     <p id="modal-message"></p>
                     <div class="">
-                    <p class="alert alert-light mt-3">Jedną z najprostszych technik Blind SQL Injection jest omijanie mechanizmów uwierzytelniania, takich jak formularze logowania. W tym przypadku celem nie jest uzyskanie konkretnych danych z bazy, lecz przejście procesu logowania.</p>
+                    <p class="alert alert-light mt-3">Jedną z najprostszych technik Blind SQL Injection jest omijanie mechanizmów uwierzytelniania <strong>(Authentication Bypass)</strong>, takich jak formularze logowania. W tym przypadku celem nie jest uzyskanie konkretnych danych z bazy, lecz przejście procesu logowania.</p>
                     </div>
                     <h6 class="mt-3">SQL Query:</h6>
                     <pre id="modal-sql-query" class="bg-light p-3"></pre>
