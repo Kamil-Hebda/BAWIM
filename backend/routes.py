@@ -16,10 +16,9 @@ def init_routes(app):
     def get_one_rand_user():
         with psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI']) as conn:
             with conn.cursor() as cursor:
-                cursor.execute("SELECT * FROM users")
-                result = cursor.fetchall()
-                one_user= result[randint(0, len(result)-1)]
-        return jsonify({"username" : one_user[1]})
+                cursor.execute("SELECT username FROM users ORDER BY RANDOM() LIMIT 1")
+                result = cursor.fetchone()
+        return jsonify({"username" : result[0]})
     
     @app.route('/classic_sqli', methods=['GET', 'POST'])
     def classic_sqli():
@@ -91,7 +90,7 @@ def init_routes(app):
         else:
             return jsonify({"message": "Login failed!"}), 401
 
-    @app.route('/blind_sqli', methods=['GET', 'POST'])
+    @app.route('/time_based_sqli', methods=['GET', 'POST'])
     def blind_sqli():
         if request.method == 'POST':
             username = request.form['username']
@@ -101,8 +100,8 @@ def init_routes(app):
             cursor.execute(query)
             result = cursor.fetchall()
             conn.close()
-            return render_template('blind_sqli.html', result=result)
-        return render_template('blind_sqli.html')
+            return render_template('time_based_sqli.html', result=result)
+        return render_template('time_based_sqli.html')
     
     @app.route('/out_of_band_sqli', methods=['GET', 'POST'])
     def out_of_band_sqli():
@@ -111,12 +110,19 @@ def init_routes(app):
             if data:
                 username = data['username']
                 password = data['password']
-                conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
-                cursor = conn.cursor()
-                # Celowe wprowadzanie podatności SQL Injection
-                cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
-                conn.commit()
-                conn.close()
-                return jsonify({"status": "success", "message": "Out-of-Band SQL Injection executed"}), 200
+                try:
+                    conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+                    cursor = conn.cursor()
+                    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+                    cursor.execute(query)
+                    result = cursor.fetchone()
+                    conn.commit()
+                    conn.close()
+                    if result:
+                        return jsonify({"status": "success", "message": "Login successfully", "result": result}), 200
+                    else:
+                        return jsonify({"status": "error", "message": "Invalid username or password"}), 400
+                except Exception as e:
+                    return jsonify({"status": "error", "message": str(e)}), 400
             return jsonify({"status": "error", "message": "No data provided"}), 400
         return render_template('out_of_band_sqli.html')
