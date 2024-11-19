@@ -9,3 +9,11 @@ class Entry(db.Model):
     content = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.String(20), nullable=False)
     entry_type = db.Column(db.Text, nullable=False)
+
+
+class OutOfBandData(db.Model):
+    __bind_key__ = 'second_db'
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    password = db.Column(db.String(100))
