@@ -15,7 +15,7 @@ def init_routes(app):
     
     @app.route('/get_one_rand_user', methods=['GET'])
     def get_one_rand_user():
-        with psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI']) as conn:
+        with psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db1']) as conn:
             with conn.cursor() as cursor:
                 cursor.execute("SELECT username FROM users ORDER BY RANDOM() LIMIT 1")
                 result = cursor.fetchone()
@@ -31,7 +31,7 @@ def init_routes(app):
         if data:
             username = data['username']
             password = data['password']
-            conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+            conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db1'])
             cursor = conn.cursor()
             # celowe wprowadzanie podatności sql injection
             query = f"SELECT id FROM users WHERE username = '{username}' AND password = '{password}'"
@@ -49,7 +49,7 @@ def init_routes(app):
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
-            with psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI']) as conn:
+            with psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db1']) as conn:
                 with conn.cursor() as cursor:
                     query = f"SELECT * FROM second_order_users WHERE username = '{username}' AND password = '{password}'"
                     cursor.execute(query)
@@ -64,7 +64,7 @@ def init_routes(app):
         password = request.json.get('password')
         
         try:
-            conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+            conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db1'])
             cursor = conn.cursor()
             cursor.execute("INSERT INTO second_order_users (username, password_hash) VALUES (%s, %s)", (username, password))
             conn.commit()
@@ -80,7 +80,7 @@ def init_routes(app):
         username = request.json.get('username')
         password = request.json.get('password')
         
-        conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+        conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db1'])
         cursor = conn.cursor()
         
         query = f"SELECT * FROM second_order_users WHERE password_hash = '{password}' AND username = '{username}'"    # solution: username' OR '''' = '''
@@ -120,7 +120,7 @@ def init_routes(app):
                 username = data['username']
                 password = data['password']
                 try:
-                    conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+                    conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db2'])
                     cursor = conn.cursor()
                     query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
                     cursor.execute(query)
@@ -146,7 +146,7 @@ def init_routes(app):
         password = request.json.get('password')
         
         try:
-            conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+            conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db1'])
             cursor = conn.cursor()
             cursor.execute("INSERT INTO second_order_users (username, password_hash) VALUES (%s, %s)", (username, password))
             conn.commit()
@@ -162,7 +162,7 @@ def init_routes(app):
         username = request.json.get('username')
         password = request.json.get('password')
         
-        conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+        conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db1'])
         cursor = conn.cursor()
         
         query = f"SELECT * FROM second_order_users WHERE password_hash = '{password}' AND username = '{username}'"    # solution: username' OR '''' = '''

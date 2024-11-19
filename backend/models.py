@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class Entry(db.Model):
+    __bind_key__ = 'db1'
     __tablename__ = 'entry'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False)
@@ -12,7 +13,7 @@ class Entry(db.Model):
 
 
 class OutOfBandData(db.Model):
-    __bind_key__ = 'second_db'
+    __bind_key__ = 'db2'
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))

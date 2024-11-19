@@ -19,8 +19,9 @@ DATABASE_URL = f"postgresql://{db_user}:{password}@{db_host}:{db_port}/{db_name}
 DATABASE_URL_2 = f"postgresql://{db_user_2}:{password_2}@{db_host_2}:{db_port_2}/{db_name_2}"
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = DATABASE_URL
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_BINDS = {
-        'second_db': DATABASE_URL_2
+        'db1': DATABASE_URL,
+        'db2': DATABASE_URL_2
     }
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
