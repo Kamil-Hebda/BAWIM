@@ -10,14 +10,49 @@
 <body>
     <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
         <h1 style="font-weight: bold;">Second-order SQL Injection</h1>
-            <div class="card">
+            <div class="card mt-3">
                 <div class="card-body">
-                    <p>Celem zadania jest <span style="font-weight: bold;">pozyskanie danych o loginach i hasłach użytkowników</span>, znajdujących się w bazie danych tego serwisu.
-                    <br>Atakujący, powinien stworzyć odpowiedni login, a następnie zalogować się w celu przechwycenia zawartości DB.</p>
-                    <p>Atak trzeba przeprowadzić według przedstawionego podczas części teoretycznej paradygmatu <span style="font-weight: bold;"> Second-Order SQL Injection.</span></p>
-                    <p>UWAGA! Zastanów się jak <span style="font-weight: bold;">FLASK</span> operuje na bazach danych (jakiego warunku <code>OR</code> trzeba użyć).</p>
+                    <p>
+                        Celem tego zadania jest pozyskanie danych o loginach i hasłach użytkowników, które znajdują się w bazie danych tego serwisu. 
+                        Atak wymaga przeprowadzenia <strong>Second-Order SQL Injection</strong>, gdzie złośliwe dane są wprowadzane w jednym miejscu aplikacji, 
+                        a wykorzystane w innym, podczas wewnętrznego przetwarzania danych przez serwer.
+                    </p>
+                    <p>
+                        Twoim zadaniem jest utworzenie odpowiedniego loginu w procesie rejestracji, a następnie wykorzystanie tego konta, aby przechwycić zawartość bazy danych 
+                        podczas próby logowania.
+                    </p>
+                    <h4 class="mt-3">Etapy zadania:</h4>
+                    <ul>
+                        <li>
+                            <strong>Rejestracja:</strong> Wprowadzenie złośliwego ładunku SQL jako loginu.
+                        </li>
+                        <li>
+                            <strong>Logowanie:</strong> Próba zalogowania się na wcześniej utworzone konto, która aktywuje przygotowane wcześniej, zainfekowane zapytanie SQL.
+                        </li>
+                        <li>
+                            <strong>Wynik ataku:</strong> Pozyskanie loginów i haseł użytkowników z bazy danych.
+                        </li>
+                    </ul>
+                    <h4 class="mt-3">Pomocne wskazówki:</h4>
+                    <ul>
+                        <li>
+                            <code>SELECT ... WHERE</code>: Flask do wyłonienia wyników z bazy danych, wykorzystuje tego rodzaju klauzule.
+                        </li>
+                        <li>
+                            Flask w zapytaniu SQL porównuje <code>password</code> z <code>username</code>.
+                        </li>
+                        <li>
+                            Trudność polega na odpowiednim zdefiniowaniu warunku <code>OR</code> 
+                        w celu osiągnięcia zamierzonego efektu.
+                        </li>
+                    </ul>
+                    <p class="mt-3">
+                        Pamiętaj, aby dokładnie przeanalizować sposób przechowywania i przetwarzania danych w aplikacji. Second-Order SQL Injection 
+                        różni się od klasycznego w tym, że złośliwe dane nie są natychmiast przetwarzane, co wymaga większej precyzji w przygotowaniu ataku.
+                    </p>
                 </div>
             </div>
+
         {% include "signup.html" %}
     </div>
 
