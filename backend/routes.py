@@ -167,7 +167,7 @@ def init_routes(app):
                 try:
                     conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db2'])
                     cursor = conn.cursor()
-                    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+                    query = f"SELECT * FROM users WHERE name = '{username}' AND password = '{password}'"
                     cursor.execute(query)
                     result = cursor.fetchone()
                     conn.commit()
