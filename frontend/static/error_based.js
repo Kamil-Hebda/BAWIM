@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', function(event) {
+document.addEventListener('DOMContentLoaded', function (event) {
     const button = document.getElementById('signupButton');
     const form = document.getElementById('signupForm');
 
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function (event) {
         event.preventDefault();
 
         const formData = new FormData(form);
@@ -11,25 +11,26 @@ document.addEventListener('DOMContentLoaded', function(event) {
             password: formData.get('password')
         };
 
-        fetch('/signup', {
+        fetch('/signup_error', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json',
             },
         })
-        .then(response => {
-            if(response.status === 200) {
-                window.location.href = '/second_order_sqli';
-            } else {
-                return response.json().then(error => {
-                    alert(error.message);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+            .then(response => {
+                return response.json();
+            })
+            .then(data => { 
+                document.getElementById('modal-message').innerText = data.message;
+                document.getElementById('modal-sql-query').innerText = data.feedback;
+                const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+                modal.show();
+            })
+            .catch(error => {
+                alert('Error: ' + error);
+                console.error('Error:', error);
+            });
     });
 
     loginButton.addEventListener('click', function (event) {
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
             password: formData.get('password'),
         };
 
-        fetch('/login', {
+        fetch('/error_login', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
             },
         })
             .then(response => {
-                if (response.ok) {
+                if (response.status === 200) {
                     return response.json();
                 } else {
                     return response.json().then(error => {
@@ -60,14 +61,13 @@ document.addEventListener('DOMContentLoaded', function(event) {
                 }
             })
             .then(data => {
-                document.getElementById('modal-message').innerText = data.feedback;
-                document.getElementById('modal-sql-query').innerText = data.message;
+                document.getElementById('modal-message').innerText = data.message;
+                document.getElementById('modal-sql-query').innerText = data.feedback;
                 const modal = new bootstrap.Modal(document.getElementById('resultModal'));
                 modal.show();
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert(error.message);
+                alert("Brak takiego użytkownika");
             });
     });
 });
