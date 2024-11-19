@@ -1,14 +1,12 @@
 import os
 from urllib.parse import quote_plus
 
-# Parametry dla pierwszej bazy danych Railway
 password = quote_plus(os.getenv('DB_PASSWORD', 'AGpiPAbmsPgaHZpsluaMjHvvXRigJVjr'))
 db_host = os.getenv('DB_HOST', 'autorack.proxy.rlwy.net')
 db_port = os.getenv('DB_PORT', '13722')
 db_name = os.getenv('DB_NAME', 'railway')
 db_user = os.getenv('DB_USER', 'postgres')
 
-# Parametry dla drugiej bazy danych lokalna baza PostgreSQL w kontenerze
 password_2 = quote_plus(os.getenv('LOCAL_DB_PASSWORD', 'postgres'))
 db_host_2 = os.getenv('LOCAL_DB_HOST', 'localhost')
 db_port_2 = os.getenv('LOCAL_DB_PORT', '5432')

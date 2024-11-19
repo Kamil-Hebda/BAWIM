@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Error-Based SQL Injection</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
         <h1 style="font-weight: bold;">Error-Based SQL Injection</h1>
         <p>W tym ćwiczeniu chcemy wykorzystać podatność naszej aplikacji webowej na atak typu <span style="font-weight: bold;">Error-Based SQL Injection.</span> <br>
         Manipulując formularzem chcemy uzyskać jak najwięcej informacji o naszej bazie danych. Powinieneś skupić się na klauzuli UNION.  </p>
-        <p>Atak trzeba przeprowadzić według przedstawionego podczas części teoretycznej paradygmatu.</p>
+        <p>Atak trzeba przeprowadzić według przedstawionego podczas części teoretycznej paradygmatu. W Rezultacie powinieneś wydobyć: <br>
+        <span style="font-weight: bold;">Rodzaj bazy danych, nazwy tabel, nazwę bazy danych, nazwy kolumny, nr portu naszej bazy danych</span></p>
         {% include "signup.html" %}
     </div>
 
@@ -37,6 +39,7 @@
             </div>
         </div>
     </div>
+    {% include 'footer.html' %}
 
     <script src="../static/error_based.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

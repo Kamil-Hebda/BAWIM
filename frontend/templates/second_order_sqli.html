@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Second-order SQL Injection</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container mt-5 p-4 border rounded shadow-sm bg-white">
         <h1 style="font-weight: bold;">Second-order SQL Injection</h1>
         <p>Celem zadania jest <span style="font-weight: bold;">pozyskanie danych o loginach i hasłach użytkowników</span>, znajdujących się w bazie danych tego serwisu.
         <br>Atakujący, powinien stworzyć odpowiedni login, a następnie zalogować się w celu przechwycenia zawartości DB.</p>
@@ -38,6 +39,7 @@
             </div>
         </div>
     </div>
+    {% include 'footer.html' %}
 
     <script src="../static/second_order.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
