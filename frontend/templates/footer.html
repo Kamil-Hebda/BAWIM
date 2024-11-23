@@ -1,4 +1,4 @@
-<footer class="{% if request.endpoint == 'error_based_sqli' or request.endpoint == 'out_of_band_sqli' or request.endpoint == 'second_order_sqli' %}footer-absolute{% else %}footer{% endif %}">
+<footer class="{% if request.endpoint == 'error_based_sqli' or request.endpoint == 'out_of_band_sqli' or request.endpoint == 'second_order_sqli' or request.endpoint == 'time_based_sqli'%}footer-absolute{% else %}footer{% endif %}">
     <div class="footer-content">
         <p class="footer-text-left">&nbsp;&nbsp;&nbsp;Developed by: Kamil Hebda, Paweł Klocek, Szymon Gaweł</p>
         {% if request.endpoint != 'index' %}
