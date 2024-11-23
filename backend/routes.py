@@ -172,7 +172,7 @@ def init_routes(app):
                     result = cursor.fetchone()
                     conn.commit()
                     conn.close()
-                    if result:
+                    if password == result[2]:
                         return jsonify({"status": "success", "message": "Login successfully", "result": result}), 200
                     else:
                         return jsonify({"status": "error", "message": "Invalid username or password"}), 400
