@@ -28,6 +28,7 @@ body, html {
     background-color: #ffffff;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    width: 100%;
 }
 
 h1 {
@@ -65,41 +66,40 @@ h1 {
 }
 
 .footer {
+    margin-top: 50px;
     background-color: #565656;
-    padding: 10px 0;
-    margin-top: 20px;
     border-top: 1px solid #777777;
-    margin-top: auto;
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    text-align: right;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.footer-absolute {
+    margin-top: 50px;
+    background-color: #565656;
+    border-top: 1px solid #777777;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .footer-content {
-    max-width: 800px;
-    width: 100%;
-    box-sizing: border-box;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between
-}
-
-.footer p {
-    color: white;
-    margin: 0;
-    text-align: left;
-}
-
-.footer .btn {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    margin-left: 40px;
-    margin-bottom: 3px;
-}
-
-.container {
-    max-width: 1000px;
+    justify-content: space-between;
     width: 100%;
+    align-items: center;
+}
+
+.footer-text-left {
+    margin: 0;
+    font-size: 14px;
+    color: #ffffff;
 }
