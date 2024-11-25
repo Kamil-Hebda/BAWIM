@@ -164,19 +164,24 @@ def init_routes(app):
             if data:
                 username = data['username']
                 password = data['password']
+
+                if not username or not password:
+                    return jsonify({"status": "error", "message": "Username and password cannot be empty"}), 400
+            
+                conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db2'])
+                cursor = conn.cursor()
+                query = f"SELECT * FROM users WHERE name = '{username}' AND password = '{password}'"
                 try:
-                    conn = psycopg2.connect(app.config['SQLALCHEMY_BINDS']['db2'])
-                    cursor = conn.cursor()
-                    query = f"SELECT * FROM users WHERE name = '{username}' AND password = '{password}'"
                     cursor.execute(query)
                     result = cursor.fetchone()
                     conn.commit()
                     conn.close()
-                    if password == result[2]:
-                        return jsonify({"status": "success", "message": "Login successfully", "result": result}), 200
+                    if result:
+                        return jsonify({"status": "success", "message": "Out-of-Band SQL Injection executed"}), 200
                     else:
                         return jsonify({"status": "error", "message": "Invalid username or password"}), 400
                 except Exception as e:
+                    conn.close()
                     return jsonify({"status": "error", "message": str(e)}), 400
             return jsonify({"status": "error", "message": "No data provided"}), 400
         return render_template('out_of_band_sqli.html')
@@ -217,17 +222,3 @@ def init_routes(app):
         if not result:
             return jsonify({"message": "Wiesz coś więcej o bazie danych?", "feedback": "Brak użytkownika o podanych danych"}), 200
         return jsonify({"message": "Wiesz coś więcej o bazie danych?", "feedback": f"Żądany użytkownik: {result}"}), 200
-
-# UNION
-# SELECT 1, table_name, column_name
-# FROM information_schema.columns
-# WHERE table_schema = 'public';
-
-# ' UNION SELECT 1, table_name, column_name FROM information_schema.columns WHERE table_schema = 'public'; --
-
-# ' UNION SELECT 1, current_database(), column_name, FROM information_schema.columns WHERE table_schema = 'public'; --
-
-#' UNION SELECT 1, datname, pg_catalog.pg_get_userbyid(datdba) AS owner FROM pg_database; --
-
-# ' UNION SELECT inet_client_port(), 'd', 'd'; --
-
