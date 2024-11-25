@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', function(event) {
             password: formData.get('password')
         };
 
+
+        if (data.password === '') {
+            alert('Please enter a password');
+            return;
+        }
+
         fetch('/signup', {
             method: 'POST',
             body: JSON.stringify(data),
