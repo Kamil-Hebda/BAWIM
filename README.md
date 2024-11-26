@@ -10,7 +10,39 @@ git clone <URL_REPOZYTORIUM>
 cd <NAZWA_REPOZYTORIUM>
 ```
 
-## 2. Uruchomienie aplikacji Flask
+## 2. Połączenie z bazą danych PostgreSQL
+
+Aplikacja wymaga połączenia z bazą danych PostgreSQL. W tym celu używamy kontenera Docker.
+
+### a. Pobranie obrazu kontenera
+
+Najpierw musisz pobrać obraz kontenera z Docker Hub. Użyj poniższego polecenia:
+
+```bash
+docker pull khebda/oob_sqli1:latest
+```
+
+### b. Uruchomienie kontenera
+
+Aby uruchomić kontener PostgreSQL, użyj poniższego polecenia:
+
+```bash
+docker run --name oob_sqli1 -p 5432:5432 -v nowy_volume4:/var/lib/postgresql/data khebda/oob_sqli1:latest
+```
+
+Po uruchomieniu kontenera, aplikacja będzie dostępna na porcie `5432`. Teraz możesz połączyć się z bazą danych.
+
+### c. Wejście do kontenera
+
+Aby wejść do uruchomionego kontenera i zacząć pracę w środowisku, użyj poniższego polecenia:
+
+```bash
+docker exec -it oob_sqli1 bash
+```
+
+Będziesz mógł teraz pracować w kontenerze i wykonywać wszelkie niezbędne operacje na bazie danych.
+
+## 3. Uruchomienie aplikacji Flask
 
 Aby uruchomić aplikację Flask, postępuj zgodnie z poniższymi krokami:
 
@@ -47,39 +79,6 @@ python app.py
 ```
 
 Aplikacja będzie dostępna pod adresem `http://127.0.0.1:5000/` w twojej przeglądarce.
-
-## 3. Połączenie z bazą danych PostgreSQL
-
-Aplikacja wymaga połączenia z bazą danych PostgreSQL. W tym celu używamy kontenera Docker.
-
-### a. Pobranie obrazu kontenera
-
-Najpierw musisz pobrać obraz kontenera z Docker Hub. Użyj poniższego polecenia:
-
-```bash
-docker pull khebda/oob_sqli1:latest
-```
-
-### b. Uruchomienie kontenera
-
-Aby uruchomić kontener PostgreSQL, użyj poniższego polecenia:
-
-```bash
-docker run --name oob_sqli1 -p 5432:5432 -v nowy_volume4:/var/lib/postgresql/data khebda/oob_sqli1:latest
-```
-
-Po uruchomieniu kontenera, aplikacja będzie dostępna na porcie `5432`. Teraz możesz połączyć się z bazą danych.
-
-### c. Wejście do kontenera
-
-Aby wejść do uruchomionego kontenera i zacząć pracę w środowisku, użyj poniższego polecenia:
-
-```bash
-docker exec -it oob_sqli1 bash
-```
-
-Będziesz mógł teraz pracować w kontenerze i wykonywać wszelkie niezbędne operacje na bazie danych.
-
 
 ## 4. Testowanie aplikacji
 
